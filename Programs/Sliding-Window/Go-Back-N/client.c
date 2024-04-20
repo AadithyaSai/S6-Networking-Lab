@@ -1,7 +1,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/socket.h> 
+#include <sys/socket.h>
 #include <unistd.h>
 
 // Go Back N Client implementation in C. run server first
@@ -18,8 +18,7 @@ typedef struct Frame {
     int no;
 } Frame;
 
-int main()
-{
+int main() {
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd == -1) {
         printf("Socket creation failed...\n");
@@ -32,27 +31,34 @@ int main()
     cliaddr.sin_port = htons(CLIENT_PORT);
     cliaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 
-    if (bind(sockfd, (struct sockaddr*)&cliaddr, sizeof(cliaddr)) != 0) {
+    if (bind(sockfd, (struct sockaddr *)&cliaddr, sizeof(cliaddr)) != 0) {
         printf("Socket bind failed...\n");
         exit(-1);
     }
 
-    // Client side processing...
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(SERVER_PORT);
     servaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+
+    // Client side processing...
+    int started = 0;
     unsigned int len = sizeof(cliaddr);
     Frame f;
     while (f.type != FIN) {
-        recvfrom(sockfd, &f, sizeof(f), 0, (struct sockaddr*) &servaddr, &len);
+        recvfrom(sockfd, &f, sizeof(f), 0, (struct sockaddr *)&servaddr, &len);
         if (f.type != FIN) {
+            // Uncomment this section of code to simulate a frame going missing
+            // if (!!started && f.no == 4) {
+            //     printf("Skipping frame 4 to simulate missing frame\n");
+            //     started = 1;
+            //     continue;
+            // }
             printf("Recieved [%c]. sending ACK\n", f.data);
-
             f.type = ACK;
-            sendto(sockfd, &f, sizeof(f), 0, (struct sockaddr*) &servaddr, len);
+            sendto(sockfd, &f, sizeof(f), 0, (struct sockaddr *)&servaddr, len);
         }
     }
-    
+
     // Close the socket
     close(sockfd);
 }
