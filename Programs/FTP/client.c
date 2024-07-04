@@ -25,7 +25,7 @@ int main() {
     printf("Client Connected...\n");
 
     // FTP Client Logic
-    FILE *file = fopen("output.txt", "w");
+    FILE *file = fopen("output.txt", "w+");
     if (file == NULL) {
         printf("File open failed...\n");
         exit(-1);
@@ -37,6 +37,14 @@ int main() {
         fprintf(file, "%s", data);
     }
     printf("File received from server...\n");
+
+    printf("File Contents:\n");
+    printf("--------------\n");
+    rewind(file);
+    while (fgets(data, sizeof(data), file) != NULL) {
+        printf("%s", data);
+    }
+    printf("--------------\n");
 
     fclose(file);
     close(sockfd);

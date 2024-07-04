@@ -56,5 +56,4 @@ int main() {
 
     fclose(file);
     close(sockfd);
-    close(connfd);
 }
