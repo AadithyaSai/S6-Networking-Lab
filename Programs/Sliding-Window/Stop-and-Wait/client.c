@@ -42,11 +42,20 @@ int main()
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(SERVER_PORT);
     servaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+
+    int hasErrored = 0;  // For simulating errors in the network
     unsigned int len = sizeof(cliaddr);
     Frame f;
     while (f.type != FIN) {
         recvfrom(sockfd, &f, sizeof(f), 0, (struct sockaddr*) &servaddr, &len);
         if (f.type != FIN) {
+            // Simulate errors in the network
+            if (f.no == 2 && !hasErrored) {
+                hasErrored = 1;
+                printf("Error in network. Dropping frame\n");
+                continue;
+            }
+
             printf("Recieved [%c]. sending ACK\n", f.data);
 
             f.type = ACK;
