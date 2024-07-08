@@ -18,30 +18,18 @@ int main() {
     }
   }
 
-  char choice;
-  int i = 0;
-  int prev, next;
-  do {
+  for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      prev = j != 0 ? j - 1 : n - 1;
-      next = (j + 1) % n;
       for (int k = 0; k < n; k++) {
         if (routing_table[j][k] >
-            routing_table[j][prev] + routing_table[prev][k]) {
-          routing_table[j][k] = routing_table[j][prev] + routing_table[prev][k];
-        } else if (routing_table[j][k] >
-                   routing_table[j][next] + routing_table[next][k]) {
-          routing_table[j][k] = routing_table[j][next] + routing_table[next][k];
+            routing_table[j][i] + routing_table[i][k]) {
+          routing_table[j][k] = routing_table[j][i] + routing_table[i][k];
         }
       }
     }
-    i++;
-    printf("Iteration - %d\n", i);
-    print_table(routing_table, n);
-
-    printf("Do you want to continue?(y/n): ");
-    scanf(" %c", &choice);
-  } while (choice != 'n');
+  }
+  printf("Result\n");
+  print_table(routing_table, n);
 
   return 0;
 }

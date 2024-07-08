@@ -25,7 +25,7 @@ Collection of programs for the Networking Lab as per KTU 2019 Scheme
 
 ### Routing Algorithms
 
-1. [Implementing Distance Vector Routing in C (TODO)](Programs/Routing%20Algorithms)
+1. [Implementing Distance Vector Routing in C](Programs/Routing%20Algorithms)
 2. [Implementing Link State Routing in C (TODO)]()
 
 ### Leaky Bucket
